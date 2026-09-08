@@ -38,8 +38,15 @@ jobs:
         run: |
           aws sts get-caller-identity
 
+      - name: Verify GitHub workspace
+        run: |
+          pwd
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          ls -la
+          ls -la ansible/playbooks
+          ls -la reports || true
+
       - name: Run Ansible health check
         run: |
           ANSIBLE_CONFIG=$PWD/ansible.cfg \
           ansible-playbook ansible/playbooks/health_check.yml
-          

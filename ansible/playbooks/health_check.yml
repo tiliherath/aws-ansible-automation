@@ -84,7 +84,6 @@
   become: false
 
   tasks:
-
     - name: Create report directories
       ansible.builtin.file:
         path: "{{ item }}"
