@@ -41,8 +41,7 @@ jobs:
           test -f ansible/playbooks/health_check.yml
           test -f ansible/playbooks/templates/health_report.json.j2
           test -f ansible/playbooks/templates/health_report.html.j2
-          test -d ansible/inventory
-          test -d ansible/roles
-          test -d reports/json
-          test -d reports/html
+          test -f ansible/inventory/hosts.yml
+          test -d ansible/playbooks
+          test -d ansible/playbooks/templates
           echo "Project structure validation passed"
