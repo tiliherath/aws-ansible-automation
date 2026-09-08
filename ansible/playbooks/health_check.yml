@@ -41,14 +41,24 @@
 
     - name: Check root filesystem
       ansible.builtin.shell:
-        cmd: set -o pipefail && df -h / | tail -1
+        cmd: set -o pipefail && df -h --output=source,size,used,avail,pcent,target / | tail -1
         executable: /bin/bash
       register: root_disk
       changed_when: false
 
-    - name: Add disk information to health results
+    - name: Parse root filesystem information
       ansible.builtin.set_fact:
-        health_status: "{{ health_status | combine({'root_filesystem': root_disk.stdout}) }}"
+        root_filesystem:
+          device: "{{ root_disk.stdout.split()[0] }}"
+          size: "{{ root_disk.stdout.split()[1] }}"
+          used: "{{ root_disk.stdout.split()[2] }}"
+          available: "{{ root_disk.stdout.split()[3] }}"
+          usage_percent: "{{ root_disk.stdout.split()[4] }}"
+          mount_point: "{{ root_disk.stdout.split()[5] }}"
+
+    - name: Add structured disk information to health results
+      ansible.builtin.set_fact:
+        health_status: "{{ health_status | combine({'root_filesystem': root_filesystem}) }}"
 
     - name: Display root filesystem usage
       ansible.builtin.debug:

@@ -18,6 +18,11 @@
         <th>Kernel</th>
         <th>CPU Cores</th>
         <th>Memory (MB)</th>
+        <th>Disk Size</th>
+        <th>Disk Used</th>
+        <th>Disk Available</th>
+        <th>Disk Usage</th>
+        <th>Mount Point</th>
         <th>SSH Status</th>
     </tr>
 
@@ -29,6 +34,11 @@
         <td>{{ hostvars[host]['health_status']['kernel'] }}</td>
         <td>{{ hostvars[host]['health_status']['cpu_cores'] }}</td>
         <td>{{ hostvars[host]['health_status']['memory_mb'] }}</td>
+        <td>{{ hostvars[host]['health_status']['root_filesystem']['size'] }}</td>
+        <td>{{ hostvars[host]['health_status']['root_filesystem']['used'] }}</td>
+        <td>{{ hostvars[host]['health_status']['root_filesystem']['available'] }}</td>
+        <td>{{ hostvars[host]['health_status']['root_filesystem']['usage_percent'] }}</td>
+        <td>{{ hostvars[host]['health_status']['root_filesystem']['mount_point'] }}</td>
         <td>{{ hostvars[host]['health_status']['ssh_service'] }}</td>
     </tr>
 {% endfor %}
