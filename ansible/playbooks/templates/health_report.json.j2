@@ -1,0 +1,8 @@
+{
+  "generated_at": "{{ ansible_facts['date_time']['iso8601'] }}",
+  "servers": {
+{% for host in groups['all'] if host != 'localhost' %}
+    "{{ host }}": {{ hostvars[host]['health_status'] | to_nice_json }}{% if not loop.last %},{% endif %}
+{% endfor %}
+  }
+}

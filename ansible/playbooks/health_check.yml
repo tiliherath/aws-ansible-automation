@@ -5,6 +5,16 @@
 
   tasks:
 
+    - name: Initialize health check results
+      ansible.builtin.set_fact:
+        health_status:
+          hostname: "{{ ansible_facts['hostname'] }}"
+          operating_system: "{{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
+          kernel: "{{ ansible_facts['kernel'] }}"
+          uptime_seconds: "{{ ansible_facts['uptime_seconds'] }}"
+          cpu_cores: "{{ ansible_facts['processor_vcpus'] }}"
+          memory_mb: "{{ ansible_facts['memtotal_mb'] }}"
+
     - name: Display hostname
       ansible.builtin.debug:
         msg: "Hostname: {{ ansible_facts['hostname'] }}"
@@ -35,6 +45,10 @@
       register: root_disk
       changed_when: false
 
+    - name: Add disk information to health results
+      ansible.builtin.set_fact:
+        health_status: "{{ health_status | combine({'root_filesystem': root_disk.stdout}) }}"
+
     - name: Display root filesystem usage
       ansible.builtin.debug:
         msg: "{{ root_disk.stdout }}"
@@ -45,6 +59,29 @@
       register: ssh_service
       changed_when: false
 
+    - name: Add SSH status to health results
+      ansible.builtin.set_fact:
+        health_status: "{{ health_status | combine({'ssh_service': ssh_service.status.ActiveState}) }}"
+
     - name: Display SSH service status
       ansible.builtin.debug:
         msg: "SSH service state: {{ ssh_service.status.ActiveState }}"
+
+- name: Generate Health Reports
+  hosts: localhost
+  gather_facts: true
+  become: false
+
+  tasks:
+
+    - name: Generate JSON health report
+      ansible.builtin.template:
+        src: health_report.json.j2
+        dest: "{{ playbook_dir }}/../../reports/json/health_report.json"
+        mode: '0644'
+
+    - name: Generate HTML health report
+      ansible.builtin.template:
+        src: health_report.html.j2
+        dest: "{{ playbook_dir }}/../../reports/html/health_report.html"
+        mode: '0644'

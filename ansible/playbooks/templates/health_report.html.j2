@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Linux Server Health Report</title>
+</head>
+<body>
+
+<h1>Linux Server Health Report</h1>
+
+<p>Generated at: {{ ansible_facts['date_time']['iso8601'] }}</p>
+
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Server</th>
+        <th>Hostname</th>
+        <th>Operating System</th>
+        <th>Kernel</th>
+        <th>CPU Cores</th>
+        <th>Memory (MB)</th>
+        <th>SSH Status</th>
+    </tr>
+
+{% for host in groups['all'] if host != 'localhost' %}
+    <tr>
+        <td>{{ host }}</td>
+        <td>{{ hostvars[host]['health_status']['hostname'] }}</td>
+        <td>{{ hostvars[host]['health_status']['operating_system'] }}</td>
+        <td>{{ hostvars[host]['health_status']['kernel'] }}</td>
+        <td>{{ hostvars[host]['health_status']['cpu_cores'] }}</td>
+        <td>{{ hostvars[host]['health_status']['memory_mb'] }}</td>
+        <td>{{ hostvars[host]['health_status']['ssh_service'] }}</td>
+    </tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>
