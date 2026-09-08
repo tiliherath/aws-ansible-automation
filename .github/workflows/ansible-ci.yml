@@ -45,3 +45,4 @@ jobs:
           test -d ansible/playbooks
           test -d ansible/playbooks/templates
           echo "Project structure validation passed"
+          
