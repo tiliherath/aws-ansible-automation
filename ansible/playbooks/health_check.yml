@@ -85,6 +85,16 @@
 
   tasks:
 
+    - name: Create report directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - "{{ playbook_dir }}/../../reports/json"
+        - "{{ playbook_dir }}/../../reports/html"
+      delegate_to: localhost
+
     - name: Generate JSON health report
       ansible.builtin.template:
         src: health_report.json.j2
