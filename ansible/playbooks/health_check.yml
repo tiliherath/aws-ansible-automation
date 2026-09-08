@@ -1,0 +1,50 @@
+---
+- name: Linux Server Health Check
+  hosts: all
+  gather_facts: true
+
+  tasks:
+
+    - name: Display hostname
+      ansible.builtin.debug:
+        msg: "Hostname: {{ ansible_facts['hostname'] }}"
+
+    - name: Display operating system
+      ansible.builtin.debug:
+        msg: "OS: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
+
+    - name: Display kernel version
+      ansible.builtin.debug:
+        msg: "Kernel: {{ ansible_facts['kernel'] }}"
+
+    - name: Display uptime
+      ansible.builtin.debug:
+        msg: "Uptime: {{ ansible_facts['uptime_seconds'] }} seconds"
+
+    - name: Display CPU information
+      ansible.builtin.debug:
+        msg: "CPU cores: {{ ansible_facts['processor_vcpus'] }}"
+
+    - name: Display memory information
+      ansible.builtin.debug:
+        msg: "Memory: {{ ansible_facts['memtotal_mb'] }} MB"
+
+    - name: Check root filesystem
+      ansible.builtin.command:
+        cmd: df -h /
+      register: root_disk
+      changed_when: false
+
+    - name: Display root filesystem usage
+      ansible.builtin.debug:
+        msg: "{{ root_disk.stdout }}"
+
+    - name: Check SSH service
+      ansible.builtin.systemd:
+        name: sshd
+      register: ssh_service
+      changed_when: false
+
+    - name: Display SSH service status
+      ansible.builtin.debug:
+        msg: "SSH service state: {{ ssh_service.status.ActiveState }}"

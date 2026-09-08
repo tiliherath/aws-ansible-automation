@@ -1,0 +1,17 @@
+# Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Ansible
+*.retry
+.ansible/
+
+# Local environment files
+.env
+
+# Reports generated locally
+reports/json/*
+reports/html/*
