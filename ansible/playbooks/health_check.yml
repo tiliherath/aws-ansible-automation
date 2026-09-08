@@ -40,8 +40,9 @@
         msg: "Memory: {{ ansible_facts['memtotal_mb'] }} MB"
 
     - name: Check root filesystem
-      ansible.builtin.command:
-        cmd: df -h /
+      ansible.builtin.shell:
+        cmd: set -o pipefail && df -h / | tail -1
+        executable: /bin/bash
       register: root_disk
       changed_when: false
 
