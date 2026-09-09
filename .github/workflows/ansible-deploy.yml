@@ -50,3 +50,10 @@ jobs:
         run: |
           ANSIBLE_CONFIG=$PWD/ansible.cfg \
           ansible-playbook ansible/playbooks/health_check.yml
+
+      - name: Upload health reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aws-health-reports
+          path: reports/
